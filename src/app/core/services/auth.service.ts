@@ -33,7 +33,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(data: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, data).pipe(
+    return this.http.get<LoginResponse>(`${this.apiUrl}/login`, data).pipe(
       tap(response => this.storeSession(response))
     );
   }
