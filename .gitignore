@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Maven
 target/
 pom.xml.tag
@@ -63,3 +64,12 @@ allure-results/
 
 # OS
 *~
+=======
+node_modules/
+dist/
+.angular/
+*.log
+.DS_Store
+.idea/
+.vscode/
+>>>>>>> fe716c7c56be12b2dd86f560568d37eed96c8252
