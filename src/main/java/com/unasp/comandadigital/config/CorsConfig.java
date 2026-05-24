@@ -18,7 +18,6 @@ public class CorsConfig {
         config.setAllowedOrigins(List.of(
                 "http://localhost:4200",
                 "http://127.0.0.1:4200",
-                "http://localhost:8080",
                 "https://comanda-digital-backend-wacb.onrender.com"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
