@@ -244,6 +244,10 @@ export class AdminService {
   removerCategoria(id: number) { return this.desativarCategoria(id); }
   removerPrato(id: number) { return this.desativarPrato(id); }
   removerIngrediente(id: number) { return this.desativarIngrediente(id); }
+  reativarFornecedor(id: number): Observable<any> {
+    return this.http.patch(`${this.api}/admin/fornecedores/${id}/reativar`, {});
+  }
+
   removerFornecedor(id: number) { return this.desativarFornecedor(id); }
   removerUsuario(id: number) { return this.desativarUsuario(id); }
   listarProdutosFornecedor(id: number) { return this.produtosFornecedor(id); }

@@ -50,8 +50,7 @@ import { FornecedorResponse, IngredienteResponse } from '@core/models/models';
               <td>
                 <button pButton icon="pi pi-list" class="p-button-text p-button-sm" pTooltip="Produtos" (click)="abrirProdutos(f)"></button>
                 <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" (click)="editar(f)"></button>
-                <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" (click)="remover(f)" *ngIf="f.status === 'ATIVO'"></button>
-                <button pButton icon="pi pi-replay" class="p-button-text p-button-sm p-button-success" pTooltip="Reativar" (click)="reativar(f)" *ngIf="f.status === 'INATIVO'"></button>
+                <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger" (click)="remover(f)"></button>
               </td>
             </tr>
           </ng-template>
@@ -277,22 +276,6 @@ export class FornecedoresComponent implements OnInit {
         this.adminService.removerFornecedor(f.id).subscribe(() => {
           this.message.add({ severity: 'success', summary: 'Removido' });
           this.carregar();
-        });
-      }
-    });
-  }
-
-  reativar(f: FornecedorResponse) {
-    this.confirmation.confirm({
-      message: `Reativar "${f.razaoSocial}"?`,
-      icon: 'pi pi-check-circle',
-      accept: () => {
-        this.adminService.reativarFornecedor(f.id).subscribe({
-          next: () => {
-            this.message.add({ severity: 'success', summary: 'Reativado', detail: 'Fornecedor reativado com sucesso' });
-            this.carregar();
-          },
-          error: () => this.message.add({ severity: 'error', summary: 'Erro', detail: 'Não foi possível reativar' })
         });
       }
     });

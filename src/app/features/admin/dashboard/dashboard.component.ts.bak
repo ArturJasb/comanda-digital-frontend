@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { CardModule } from 'primeng/card';
@@ -15,11 +15,6 @@ import { DashboardResumo, TopPrato, SaldoEstoque } from '../../../core/models/mo
     <div class="dashboard">
       <div class="page-header">
         <h1 class="page-title">Dashboard</h1>
-        <div class="live-badge">
-          <span class="live-dot"></span>
-          <span>Ao vivo</span>
-          <small>Atualizado: {{ ultimaAtualizacao() | date:'HH:mm:ss' }}</small>
-        </div>
         <button
           pButton
           icon="pi pi-refresh"
@@ -130,36 +125,6 @@ import { DashboardResumo, TopPrato, SaldoEstoque } from '../../../core/models/mo
     .dashboard {
       max-width: 1400px;
       margin: 0 auto;
-    }
-
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #f0fdf4;
-      border: 1px solid #86efac;
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #166534;
-    }
-    .live-dot {
-      width: 8px; height: 8px;
-      background: #22c55e;
-      border-radius: 50%;
-      animation: pulse 1.5s infinite;
-    }
-    .page-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .page-title { margin: 0; flex: 1; }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
     }
 
     /* KPI Grid */
@@ -329,7 +294,7 @@ import { DashboardResumo, TopPrato, SaldoEstoque } from '../../../core/models/mo
     }
   `]
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit {
   private adminService = inject(AdminService);
   private router = inject(Router);
 
@@ -340,20 +305,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   topPratosData: any = {};
   chartOptions: any = {};
 
-  private pollInterval: any;
-  ultimaAtualizacao = signal<Date>(new Date());
-
   ngOnInit() {
     this.carregar();
     this.setupChartOptions();
-    this.pollInterval = setInterval(() => {
-      this.carregar();
-      this.ultimaAtualizacao.set(new Date());
-    }, 15000);
-  }
-
-  ngOnDestroy() {
-    if (this.pollInterval) clearInterval(this.pollInterval);
   }
 
   carregar() {
