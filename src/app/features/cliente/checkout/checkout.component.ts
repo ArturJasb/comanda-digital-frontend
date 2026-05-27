@@ -28,11 +28,18 @@ import { PedidoRequest } from '../../../core/models/models';
         ></button>
       </div>
 
-      @if (carrinho.isEmpty()) {
-        <div class="empty">
-          <p>Seu carrinho está vazio</p>
-          <button pButton label="Ir ao cardápio" (click)="irAoCardapio()"></button>
-        </div>
+      @if (pedidoConfirmado()) {
+  <div class="sucesso">
+    <div class="sucesso-icon">✅</div>
+    <h2>Pedido confirmado!</h2>
+    <p class="sucesso-num">Pedido <strong>#{{ pedidoConfirmado().id }}</strong></p>
+    <p class="sucesso-msg">Seu pedido já está sendo preparado na cozinha. Fique à vontade para acompanhar o status.</p>
+    <div class="sucesso-acoes">
+      <button pButton label="Ver meus pedidos" icon="pi pi-list" (click)="router.navigate(['/pedidos/meus'])"></button>
+      <button pButton label="Voltar ao cardápio" class="p-button-outlined" (click)="irAoCardapio()"></button>
+    </div>
+  </div>
+} @else if (carrinho.isEmpty()) {        
       } @else {
         <div class="checkout-grid">
           <div class="left-col">
@@ -143,7 +150,19 @@ import { PedidoRequest } from '../../../core/models/models';
       flex-direction: column;
       gap: 1rem;
     }
-
+.sucesso {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+.sucesso-icon { font-size: 4rem; margin-bottom: 1rem; }
+.sucesso h2 { font-size: 1.75rem; font-weight: 800; color: #166534; margin-bottom: 0.5rem; }
+.sucesso-num { font-size: 1.1rem; color: #374151; margin-bottom: 1rem; }
+.sucesso-msg { color: #6b7280; line-height: 1.6; margin-bottom: 2rem; }
+.sucesso-acoes { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .card h2 {
       font-size: 1.125rem;
       font-weight: 600;
@@ -310,16 +329,43 @@ export class CheckoutComponent {
     observacoes: ['']
   });
 
-  confirmar() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+  pedidoConfirmado = signal<any>(null);
+
+confirmar() {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    this.messageService.add({
+      severity: 'warn', summary: 'Atenção', detail: 'Preencha o endereço de entrega'
+    });
+    return;
+  }
+
+  const payload: PedidoRequest = {
+    itens: this.carrinho.itens().map(i => ({
+      pratoId: i.prato.id,
+      quantidade: i.quantidade,
+      observacoes: i.observacoes
+    })),
+    enderecoEntrega: this.form.value.enderecoEntrega,
+    observacoes: this.form.value.observacoes || undefined
+  };
+
+  this.enviando.set(true);
+  this.pedidoService.criar(payload).subscribe({
+    next: (pedido) => {
+      this.enviando.set(false);
+      this.carrinho.limpar();
+      this.pedidoConfirmado.set(pedido);
+    },
+    error: (err) => {
+      this.enviando.set(false);
       this.messageService.add({
-        severity: 'warn',
-        summary: 'Atenção',
-        detail: 'Preencha o endereço de entrega'
+        severity: 'error', summary: 'Erro ao criar pedido',
+        detail: err.error?.message || 'Tente novamente'
       });
-      return;
     }
+  });
+}
 
     const itens = this.carrinho.itens().map(i => ({
       pratoId: i.prato.id,
