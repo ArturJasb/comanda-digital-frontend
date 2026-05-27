@@ -3,9 +3,12 @@ import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/home/home.component').then(m => m.HomeComponent)
+  },
   // Redirect raiz
-  { path: '', redirectTo: 'cardapio', pathMatch: 'full' },
-
   // Autenticação
   {
     path: 'login',
@@ -58,7 +61,6 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['ADMIN', 'GERENTE', 'COZINHEIRO'] },
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
         loadComponent: () => import('./features/admin/dashboard/dashboard.component').then(m => m.DashboardComponent),

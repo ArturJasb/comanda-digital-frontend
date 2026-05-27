@@ -1,0 +1,124 @@
+<section class="hero">
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <span class="hero__eyebrow">Dark Kitchen · Delivery</span>
+    <h1 class="hero__title">Sabor que chega<br><span class="hero__title--accent">até você.</span></h1>
+    <p class="hero__subtitle">Pratos preparados na hora, com ingredientes frescos e entregues no conforto da sua casa.</p>
+    <div class="hero__actions">
+      <button class="btn btn--primary btn--lg" (click)="irParaCardapio()">Ver cardápio <span class="btn__arrow">→</span></button>
+      <a routerLink="/cadastro" class="btn btn--ghost btn--lg">Criar conta grátis</a>
+    </div>
+  </div>
+</section>
+
+<section class="badges">
+  <div class="container">
+    <div class="badges__grid">
+      <div class="badge-item"><span class="badge-item__icon">⚡</span><div><strong>Preparo rápido</strong><span>Média de 20 minutos</span></div></div>
+      <div class="badge-item"><span class="badge-item__icon">🌿</span><div><strong>Ingredientes frescos</strong><span>Selecionados diariamente</span></div></div>
+      <div class="badge-item"><span class="badge-item__icon">📦</span><div><strong>Acompanhe seu pedido</strong><span>Status em tempo real</span></div></div>
+      <div class="badge-item"><span class="badge-item__icon">🔒</span><div><strong>Pagamento seguro</strong><span>Ambiente protegido</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="categorias">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title">O que você quer hoje?</h2>
+      <p class="section__subtitle">Escolha sua categoria favorita</p>
+    </div>
+    <div class="cat-grid" *ngIf="categorias().length > 0; else catSkeleton">
+      <button *ngFor="let cat of categorias()" class="cat-card" (click)="irParaCardapio(cat.id)">
+        <span class="cat-card__icon">{{ getIconeCategoria(cat.nome) }}</span>
+        <span class="cat-card__nome">{{ cat.nome }}</span>
+        <span class="cat-card__arrow">→</span>
+      </button>
+    </div>
+    <ng-template #catSkeleton>
+      <div class="cat-grid">
+        <div class="cat-card cat-card--skeleton" *ngFor="let i of [1,2,3,4]"></div>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+<section class="section section--dark" id="destaques" *ngIf="destaques().length > 0">
+  <div class="container">
+    <div class="section__header section__header--light">
+      <h2 class="section__title">Mais pedidos</h2>
+      <p class="section__subtitle">Os favoritos dos nossos clientes</p>
+    </div>
+    <div class="pratos-grid">
+      <div class="prato-card" *ngFor="let p of destaques()">
+        <div class="prato-card__img-wrap">
+          <img [src]="p.fotoUrl || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80'"
+               [alt]="p.nome" class="prato-card__img" loading="lazy"
+               onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80'">
+          <span class="prato-card__tempo">{{ p.tempoPreparo || 20 }} min</span>
+        </div>
+        <div class="prato-card__body">
+          <span class="prato-card__categoria">{{ p.categoria?.nome }}</span>
+          <h3 class="prato-card__nome">{{ p.nome }}</h3>
+          <p class="prato-card__desc">{{ p.descricao }}</p>
+          <div class="prato-card__footer">
+            <span class="prato-card__preco">{{ formatarPreco(p.precoVenda) }}</span>
+            <button class="btn btn--primary btn--sm" (click)="irParaCardapio()">Pedir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section__cta">
+      <button class="btn btn--outline btn--lg" (click)="irParaCardapio()">Ver todos os pratos</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="como-funciona">
+  <div class="container">
+    <div class="section__header">
+      <h2 class="section__title">Como funciona?</h2>
+      <p class="section__subtitle">Simples assim, em 3 passos</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step__num">01</div><div class="step__icon">🛒</div><h3 class="step__title">Escolha no cardápio</h3><p class="step__desc">Navegue pelos pratos e adicione ao carrinho.</p></div>
+      <div class="step__connector"></div>
+      <div class="step"><div class="step__num">02</div><div class="step__icon">✅</div><h3 class="step__title">Confirme o pedido</h3><p class="step__desc">Faça login, revise e confirme com um clique.</p></div>
+      <div class="step__connector"></div>
+      <div class="step"><div class="step__num">03</div><div class="step__icon">🚀</div><h3 class="step__title">Acompanhe em tempo real</h3><p class="step__desc">Receba atualizações do status do seu pedido.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <div class="container">
+    <div class="cta-final__box">
+      <div class="cta-final__text"><h2>Pronto para pedir?</h2><p>Crie sua conta e faça seu primeiro pedido agora.</p></div>
+      <div class="cta-final__actions">
+        <button class="btn btn--primary btn--lg" (click)="irParaCardapio()">Ir para o cardápio</button>
+        <a routerLink="/cadastro" class="btn btn--ghost btn--lg">Criar conta grátis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="footer__logo">Comanda<strong>Digital</strong></span>
+        <p>Sistema de pedidos para Dark Kitchen. UNASP SP.</p>
+      </div>
+      <div class="footer__links"><h4>Navegação</h4><ul>
+        <li><a routerLink="/cardapio">Cardápio</a></li>
+        <li><a routerLink="/login">Login</a></li>
+        <li><a routerLink="/cadastro">Criar conta</a></li>
+      </ul></div>
+      <div class="footer__links"><h4>Conta</h4><ul>
+        <li><a routerLink="/login">Entrar</a></li>
+        <li><a routerLink="/admin/dashboard">Área Admin</a></li>
+      </ul></div>
+    </div>
+    <div class="footer__bottom">© 2026 Comanda Digital · UNASP SP</div>
+  </div>
+</footer>
